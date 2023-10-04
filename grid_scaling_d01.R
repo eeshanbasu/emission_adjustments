@@ -22,15 +22,15 @@ template_raster <- raster(wrf_extent,
 template_raster[] <- 1  # Set all grid cells to 1
 
 ## EQUATES variables
-# var_equates <- c("POC", "NO2", "SO2", "NH3", "PEC", "NO", "PSO4", "CL2", "ALD2", "ALDX", "BENZ", 
-#                  "ETH", "ETHA", "FORM", "HCL", "HONO", "IOLE", "ISOP", "SULF", "TERP", "TOL")
+# var_equates <- c("POC", "NO2", "SO2", "NH3", "PEC", "NO", "PSO4", "ALD2", "ALDX", "BENZ", 
+#                  "ETH", "ETHA", "FORM", "HONO", "IOLE", "ISOP", "TERP", "TOL")
 
 # EQUATES variables
 var_equates <- c("TERP", "TOL")
 
 ## WRF-Chem variables
-# var_wrfchem <- c("E_ORGJ", "E_NO2", "E_SO2", "E_NH3", "E_PM25J", "E_NO", "E_SO4J", "E_CL2", "E_ALD2", "E_ALDX", "E_BENZENE", 
-#                  "E_ETH", "E_ETHA", "E_FORM", "E_HCL", "E_HONO", "E_IOLE", "E_ISOP", "E_PSULF", "E_TERP", "E_TOL")
+# var_wrfchem <- c("E_ORGJ", "E_NO2", "E_SO2", "E_NH3", "E_PM25J", "E_NO", "E_SO4J", "E_ALD2", "E_ALDX", "E_BENZENE", 
+#                  "E_ETH", "E_ETHA", "E_FORM", "E_HONO", "E_IOLE", "E_ISOP", "E_TERP", "E_TOL")
 
 var_wrfchem <- c("E_TERP", "E_TOL")
 
