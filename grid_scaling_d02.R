@@ -111,7 +111,7 @@ for (i in 1:length(var_equates)) {
   # choosing the path and doing the calculations
   path_files <- ("E:/Eeshan/EQUATES/model_ready_emissions/after/2012/d02/")
   files <- dir(path = "E:/Eeshan/EQUATES/model_ready_emissions/after/2012/d02/",
-               pattern = 'wrfchemi_d02_2012-12-*')
+               pattern = 'wrfchemi_d02_2012-01-*')
   
   for (j in 1:length(files)) {
     
