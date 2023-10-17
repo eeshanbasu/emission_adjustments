@@ -44,7 +44,7 @@ for (i in 1:length(var_equates)) {
   equates_1301_extent <- raster::extent(-2556000, -2556000 + 459 * 12000, -1728000, -1728000 + 299 * 12000)
   raster::extent(equates_1301_rast) <- equates_1301_extent
   terra::crs(equates_1301_rast) <- equates_1301_crs
-  plot(equates_1301_rast[[1]])
+  # plot(equates_1301_rast[[1]])
   
   equates_1301_reproj <- raster::projectRaster(from = equates_1301_rast, crs ="+proj=lcc +lat_0=40.7639198303223 +lon_0=-97.6499862670898 +lat_1=33 +lat_2=45 +x_0=0 +y_0=0 +R=6370000 +units=m +no_defs")
   
@@ -93,7 +93,7 @@ for (i in 1:length(var_equates)) {
   # max_POC <- factor_POC@data@max
   
   # re-sampling the factor on the WRF-Chem grid
-  resampled_emissions <- resample(x, template_wrf)
+  resampled_emissions <- resample(x, template_raster_reproj)
   
   # converting the raster to a matrix
   resampled_emissions_matrix <- as.matrix(resampled_emissions)
