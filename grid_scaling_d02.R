@@ -30,7 +30,7 @@ var_wrfchem <- c("E_ORGJ", "E_NO2", "E_SO2", "E_NH3", "E_PM25J", "E_NO", "E_SO4J
                  "E_ETH", "E_ETHA", "E_FORM", "E_HCL", "E_HONO", "E_IOLE", "E_ISOP", "E_PSULF", "E_TERP", "E_TOL")
 
 for (i in 1:length(var_equates)) {
-
+  
   ## changing the projection and extent from the input file/GRIDDESC
   equates_1301_rast <- raster::raster("E:/Eeshan/EQUATES/Avg.gridded.201301.nc", 
                                       varname = var_equates[i])
@@ -39,6 +39,8 @@ for (i in 1:length(var_equates)) {
   ## if someone uses this code after me, they have to check the projection from their d02 emission files
   ## i used a package function called wrf_raster from the eixport package
   ## https://search.r-project.org/CRAN/refmans/eixport/html/wrf_raster.html
+  template_wrf <- wrf_raster("E:/Eeshan/EQUATES/model_ready_emissions/after/2012/d02/wrfchemi_d02_2012-01-01_00%3A00%3A00",
+                             name = "E_NO") ## NO is just an example here
   
   equates_1301_crs <- paste0("+proj=lcc +lat_1=33 +lat_2=45 +lat_0=40 +lon_0=-97 +x_0=0 +y_0=0 +datum=WGS84 +a=6370000 +b=6370000 +units=m +no_defs")
   equates_1301_extent <- raster::extent(-2556000, -2556000 + 459 * 12000, -1728000, -1728000 + 299 * 12000)
@@ -51,20 +53,15 @@ for (i in 1:length(var_equates)) {
   template_raster_reproj <- raster::projectRaster(from = template_raster, crs ="+proj=lcc +lat_0=40.7639198303223 +lon_0=-97.6499862670898 +lat_1=33 +lat_2=45 +x_0=0 +y_0=0 +R=6370000 +units=m +no_defs")
   
   ## cropping the re-projected EQUATES only for d02
-  equates_1301_reproj_ne    <- raster::crop(equates_1301_reproj, template_raster_reproj)  # to set the lat-lon region
+  equates_1301_reproj_ne  <- raster::crop(equates_1301_reproj, template_raster_reproj)  # to set the lat-lon region
   
   # changing the resolution to the d02 domain
-  resampled_equates_1301 <- raster::disaggregate(equates_1301_reproj[[1]], 
+  resampled_equates_1301 <- raster::disaggregate(equates_1301_reproj_ne[[1]], 
                                                  fact = 2)
   
   ## changing the projection and extent from the input file/GRIDDESC
   equates_1601_rast <- raster::raster("E:/Eeshan/EQUATES/Avg.gridded.201601.nc", 
                                       varname = var_equates[i])
-  
-  ## the crs is from the d02 emission files. 
-  ## if someone uses this code after me, they have to check the projection from their d02 emission files
-  ## i used a package function called wrf_raster from the eixport package
-  ## https://search.r-project.org/CRAN/refmans/eixport/html/wrf_raster.html
   
   equates_1601_crs <- paste0("+proj=lcc +lat_1=33 +lat_2=45 +lat_0=40 +lon_0=-97 +x_0=0 +y_0=0 +datum=WGS84 +a=6370000 +b=6370000 +units=m +no_defs")
   equates_1601_extent <- raster::extent(-2556000, -2556000 + 459 * 12000, -1728000, -1728000 + 299 * 12000)
@@ -73,17 +70,17 @@ for (i in 1:length(var_equates)) {
   # plot(equates_1601_rast[[1]])
   
   equates_1601_reproj <- raster::projectRaster(from = equates_1601_rast, crs ="+proj=lcc +lat_0=40.7639198303223 +lon_0=-97.6499862670898 +lat_1=33 +lat_2=45 +x_0=0 +y_0=0 +R=6370000 +units=m +no_defs")
-  plot(equates_1601_reproj[[1]])
+  # plot(equates_1601_reproj[[1]])
   
   ## cropping the re-projected EQUATES only for d02
   equates_1601_reproj_ne    <- raster::crop(equates_1601_reproj, template_raster_reproj)  # to set the lat-lon region
   
   # changing the resolution to the d02 domain
-  resampled_equates_1601 <- raster::disaggregate(equates_1601_reproj[[1]], 
+  resampled_equates_1601 <- raster::disaggregate(equates_1601_reproj_ne[[1]], 
                                                  fact = 2)
   
   # Create the dataframe name using paste0
-  df_name <- paste0("factor_",var_equates[i])
+  df_name <- paste0("factor_",var_equates[1])
   
   # Create the dataframe and assign it to the name
   x <- assign(df_name, resampled_equates_1301/resampled_equates_1601)
@@ -93,7 +90,7 @@ for (i in 1:length(var_equates)) {
   # max_POC <- factor_POC@data@max
   
   # re-sampling the factor on the WRF-Chem grid
-  resampled_emissions <- resample(x, template_raster_reproj)
+  resampled_emissions <- resample(x, template_wrf)
   
   # converting the raster to a matrix
   resampled_emissions_matrix <- as.matrix(resampled_emissions)
@@ -103,10 +100,6 @@ for (i in 1:length(var_equates)) {
   
   # transpose the matrix to make it 120 * 150
   resampled_emissions_matrix_transpose <- t(resampled_emissions_matrix)
-  
-  ## converting the 2D matrix to a 3D matrix
-  ## no need
-  # resampled_emissions_matrix_transpose_3d <- array(resampled_emissions_matrix_transpose, dim = c(dim(resampled_emissions_matrix_transpose), 1))
   
   # choosing the path and doing the calculations
   path_files <- ("E:/Eeshan/EQUATES/model_ready_emissions/after/2012/d02/")
