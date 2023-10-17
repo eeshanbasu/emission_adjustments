@@ -70,7 +70,7 @@ for (i in 1:length(var_equates)) {
   equates_1601_extent <- raster::extent(-2556000, -2556000 + 459 * 12000, -1728000, -1728000 + 299 * 12000)
   raster::extent(equates_1601_rast) <- equates_1601_extent
   terra::crs(equates_1601_rast) <- equates_1601_crs
-  plot(equates_1601_rast[[1]])
+  # plot(equates_1601_rast[[1]])
   
   equates_1601_reproj <- raster::projectRaster(from = equates_1601_rast, crs ="+proj=lcc +lat_0=40.7639198303223 +lon_0=-97.6499862670898 +lat_1=33 +lat_2=45 +x_0=0 +y_0=0 +R=6370000 +units=m +no_defs")
   plot(equates_1601_reproj[[1]])
